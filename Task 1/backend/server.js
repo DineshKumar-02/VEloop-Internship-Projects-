@@ -25,12 +25,31 @@ app.use((req, res, next) => {
   next();
 });
 
-// Health check
+// Health and root status endpoints
+app.get('/', (req, res) => {
+  res.json({
+    status: 'online',
+    service: 'VELoop Rewards Tap & Earn API',
+    platformBodyColor: '#161827',
+    endpoints: {
+      health: '/api/health',
+      tapState: '/api/tap/state',
+      tapLeague: '/api/tap/league',
+      missions: '/api/tap/missions',
+      dailyChallenge: '/api/tap/daily-challenge',
+      adminConfig: '/api/admin/config'
+    },
+    databaseStatus: require('mongoose').connection.readyState === 1 ? 'connected' : 'connecting',
+    timestamp: new Date()
+  });
+});
+
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'online',
     service: 'VELoop Rewards Tap & Earn API',
     platformBodyColor: '#161827',
+    database: require('mongoose').connection.readyState === 1 ? 'connected' : 'connecting',
     timestamp: new Date()
   });
 });
