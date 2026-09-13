@@ -9,7 +9,15 @@ export const generateRequestId = () => {
 
 class TapApiClient {
   constructor() {
-    this.baseUrl = import.meta.env.VITE_API_BASE_URL || '/api';
+    let url = import.meta.env.VITE_API_BASE_URL;
+    if (!url) {
+      // In development fallback to local backend; in production build fallback to live Render backend
+      url = import.meta.env.DEV ? 'http://localhost:4500/api' : 'https://veloop-tap-backend.onrender.com/api';
+    }
+    if (url && url.endsWith('/')) {
+      url = url.slice(0, -1);
+    }
+    this.baseUrl = url;
     this.activeUserId = null; // Can be set when switching profiles
   }
 

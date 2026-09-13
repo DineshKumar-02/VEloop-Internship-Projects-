@@ -51,8 +51,8 @@ const AppContent = () => {
       }}>
         <AlertCircle size={48} color="#EF4444" style={{ marginBottom: '16px' }} />
         <h2 style={{ fontSize: '20px', fontWeight: 800, marginBottom: '8px' }}>Backend Connection Required</h2>
-        <p style={{ fontSize: '13px', color: '#94A3B8', maxWidth: '340px', marginBottom: '24px', lineHeight: 1.5 }}>
-          Ensure the VELoop MERN backend is running on port 5000. Error details: {error}
+        <p style={{ fontSize: '13px', color: '#94A3B8', maxWidth: '380px', marginBottom: '24px', lineHeight: 1.5 }}>
+          Could not reach the VELoop Rewards backend service. Error details: {error}
         </p>
         <button
           onClick={refreshState}
