@@ -9,7 +9,7 @@ export const generateRequestId = () => {
 
 class TapApiClient {
   constructor() {
-    this.baseUrl = '/api';
+    this.baseUrl = import.meta.env.VITE_API_BASE_URL || '/api';
     this.activeUserId = null; // Can be set when switching profiles
   }
 

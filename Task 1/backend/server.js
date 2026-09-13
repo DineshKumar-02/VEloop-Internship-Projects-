@@ -40,6 +40,22 @@ app.use('/api/tap', tapRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/auth', authRoutes);
 
+// Serve static frontend in production if available
+const path = require('path');
+const frontendDist = path.join(__dirname, '../frontend/dist');
+app.use(express.static(frontendDist));
+
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api')) return next();
+  const indexHtml = path.join(frontendDist, 'index.html');
+  const fs = require('fs');
+  if (fs.existsSync(indexHtml)) {
+    res.sendFile(indexHtml);
+  } else {
+    next();
+  }
+});
+
 // Error Handling Middleware
 app.use((err, req, res, next) => {
   console.error('[Unhandled Server Error]:', err);
@@ -47,10 +63,12 @@ app.use((err, req, res, next) => {
 });
 
 if (process.env.NODE_ENV !== 'test') {
-  app.listen(PORT, '127.0.0.1', () => {
+  const HOST = process.env.HOST || (process.env.NODE_ENV === 'production' || process.env.RENDER ? '0.0.0.0' : '127.0.0.1');
+  app.listen(PORT, HOST, () => {
     console.log(`====================================================`);
-    console.log(`VELoop Rewards Tap & Earn Server listening on http://127.0.0.1:${PORT}`);
+    console.log(`VELoop Rewards Tap & Earn Server listening on http://${HOST}:${PORT}`);
     console.log(`Fintech Body Color: #161827`);
+    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
     console.log(`====================================================`);
   });
 }
