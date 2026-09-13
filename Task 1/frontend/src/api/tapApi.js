@@ -17,6 +17,10 @@ class TapApiClient {
     if (url && url.endsWith('/')) {
       url = url.slice(0, -1);
     }
+    // If URL was set without trailing /api, append /api so all endpoints map properly
+    if (url && !url.endsWith('/api')) {
+      url = `${url}/api`;
+    }
     this.baseUrl = url;
     this.activeUserId = null; // Can be set when switching profiles
   }

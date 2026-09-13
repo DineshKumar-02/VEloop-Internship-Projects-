@@ -54,10 +54,23 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Mount Routes
+// Mount Routes (supporting both /api and direct prefix so all frontend base URLs work)
 app.use('/api/tap', tapRoutes);
+app.use('/tap', tapRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/admin', adminRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/auth', authRoutes);
+
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'online',
+    service: 'VELoop Rewards Tap & Earn API',
+    platformBodyColor: '#161827',
+    database: require('mongoose').connection.readyState === 1 ? 'connected' : 'connecting',
+    timestamp: new Date()
+  });
+});
 
 // Serve static frontend in production if available
 const path = require('path');
@@ -73,6 +86,11 @@ app.get('*', (req, res, next) => {
   } else {
     next();
   }
+});
+
+// 404 JSON fallback
+app.use((req, res) => {
+  res.status(404).json({ error: `Endpoint not found: ${req.method} ${req.originalUrl}` });
 });
 
 // Error Handling Middleware
